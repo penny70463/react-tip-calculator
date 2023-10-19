@@ -30,7 +30,7 @@ function App() {
 
   return (
     <div className="App">
-      <img src={logo} className="App-logo" alt="logo" />
+      <img className="App-logo" src={logo}  alt="logo" />
       <div className="App-body">
         <InputSection
             bill={bill}
@@ -89,12 +89,13 @@ function InputSection({ bill, setBill, percentage, setPercentage, number, setNum
         </button>}
         {showCustom &&
           <input
+            className="operate-input"
             type="number"
             value={percentage.toString()}
             onChange={(e) => {
               setPercentage(Number(e.target.value));}}
             placeholder='0'
-            className="operate-input"
+            min="0"
             />}
       </div>
       </div>
@@ -117,6 +118,7 @@ function InputField({ value, title, onChange, integer, hasError = false }) {
     <div className="input">
       <div className="input-title">{title}</div>
       <input
+        className={inputClassName} 
         type="number"
         onChange={(e) => {
           let val = e.target.value;
@@ -126,7 +128,7 @@ function InputField({ value, title, onChange, integer, hasError = false }) {
           onChange(Number(val));}}
         value={value}
         placeholder="0"
-        className={inputClassName} />
+        min="0"/>
       { hasError &&
         <span className="error-message">Can't be zero</span>}
     </div>
@@ -136,8 +138,10 @@ function InputField({ value, title, onChange, integer, hasError = false }) {
 function Tip({value, percentage, setPercentage}) {
   let isActive = percentage === value
   return (
-      <button onClick={() => setPercentage(value)}
-        className={`tip-btn tip-btn-with-style ${isActive && 'active'}`}>
+      <button 
+        className={`tip-btn tip-btn-with-style ${isActive && 'active'}`}
+        onClick={() => setPercentage(value)}
+        >
           {value}%
       </button>
   )
@@ -163,8 +167,8 @@ function TipResult({handleReset, result, disabled}) {
       <ResultInfo title="Tip Amount" value={result.tipAmount}></ResultInfo>
       <ResultInfo title="Total" value={result.total}></ResultInfo>
       <button
-        onClick={handleReset}
         className="result-btn result-btn-with-style"
+        onClick={handleReset}
         disabled={disabled}>RESET</button>
     </div>
   )
