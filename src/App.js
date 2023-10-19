@@ -91,7 +91,8 @@ function InputSection({ bill, setBill, percentage, setPercentage, number, setNum
           <input
             type="number"
             value={percentage}
-            onChange={setPercentage}
+            onChange={(e) => {
+              setPercentage(Number(e.target.value));}}
             placeholder='0'
             className="operate-input"
             />}
