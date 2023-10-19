@@ -90,7 +90,7 @@ function InputSection({ bill, setBill, percentage, setPercentage, number, setNum
         {showCustom &&
           <input
             type="number"
-            value={percentage}
+            value={percentage.toString()}
             onChange={(e) => {
               setPercentage(Number(e.target.value));}}
             placeholder='0'
