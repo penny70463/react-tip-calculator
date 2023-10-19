@@ -1,7 +1,7 @@
 {
   "name": "tip-calculator",
   "version": "0.1.0",
-  "homepage": "https://penny70463.github.io/tip-calculator",
+  "homepage": "https://penny70463.github.io/react-tip-calculator",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
