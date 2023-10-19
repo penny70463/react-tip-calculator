@@ -1,6 +1,5 @@
 import './App.css';
 import logo from './assets/logo.svg'
-import dollar from './assets/icon-dollar.svg'
 import { useState, useEffect } from 'react'
 
 const TIP_OPTIONS = [5, 10, 15, 25, 50]
