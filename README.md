@@ -30,8 +30,8 @@ For developers:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://github.com/penny70463/react-tip-calculator)
-- Live Site URL: [Add live site URL here](https://penny70463.github.io/react-tip-calculator/)
+- Solution URL: [here](https://github.com/penny70463/react-tip-calculator)
+- Live Site URL: [here](https://penny70463.github.io/react-tip-calculator/)
 
 ## My process
 
