@@ -93,7 +93,9 @@ function InputSection({ bill, setBill, percentage, setPercentage, number, setNum
             type="number"
             value={percentage.toString()}
             onChange={(e) => {
-              setPercentage(Number(e.target.value));}}
+              let val = e.target.value
+              val = val.replace(/[^0-9]/g, '');
+              setPercentage(Number(val));}}
             placeholder='0'
             min="0"
             />}
