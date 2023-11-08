@@ -341,36 +341,36 @@ function InputSection({ bill, setBill, percentage, setPercentage, number, setNum
       <InputForm>
         <InputTitle>Select Tip %</InputTitle>
         <TipWrap>
-        {TIP_OPTIONS.map(option => (
-          <Tip
-            key={option}
-            value={option}
-            percentage={percentage}
-            handleClickTip={() => {
-              setPercentage(option)
-              setShowCustom(false)
-            }}
-            />
-        ))}
-        {!showCustom && <CustomTip
-          onClick={() => {
-            setShowCustom(true)
-            setPercentage('')
-          }}>
-            Custom
-        </CustomTip>}
-        {showCustom &&
-          <OperateInput
-            type="number"
-            value={percentage.toString()}
-            onChange={(e) => {
-              let val = e.target.value
-              val = val.replace(/[^0-9]/g, '');
-              setPercentage(Number(val));}}
-            placeholder='0'
-            min="0"
-            />}
-      </TipWrap>
+          {TIP_OPTIONS.map(option => (
+            <Tip
+              key={option}
+              value={option}
+              percentage={percentage}
+              handleClickTip={() => {
+                setPercentage(option)
+                setShowCustom(false)
+              }}
+              />
+          ))}
+          {!showCustom && <CustomTip
+            onClick={() => {
+              setShowCustom(true)
+              setPercentage('')
+            }}>
+              Custom
+          </CustomTip>}
+          {showCustom &&
+            <OperateInput
+              type="number-input"
+              value={percentage.toString()}
+              onChange={(e) => {
+                let val = e.target.value
+                val = val.replace(/[^0-9]/g, '');
+                setPercentage(Number(val));}}
+              placeholder='0'
+              min="0"
+              />}
+        </TipWrap>
       </InputForm>
 
       <InputField
@@ -400,7 +400,8 @@ function InputField({ value, title, onChange, integer, hasError = false }) {
           onChange(Number(val));}}
         value={value}
         placeholder="0"
-        min="0"/>
+        min="0"
+        data-testid={title === 'Bill' ? 'bill-input' : 'number-input'}/>
       { hasError &&
         <ErrorMessage>Can't be zero</ErrorMessage>}
     </InputForm>
@@ -413,6 +414,7 @@ function Tip({value, percentage, handleClickTip}) {
       <ActiveTip 
         $isActive={isActive}
         onClick={handleClickTip}
+        data-testid={`tip${value}-input`}
         >
           {value}%
       </ActiveTip>
@@ -427,7 +429,7 @@ function ResultInfo({ title, value }) {
         <NoteFont>/ person</NoteFont>
       </div>
       <Result>
-        <div>${value}</div>
+        <div data-testid={`${title.toLowerCase()}-per-person`}>${value}</div>
       </Result>
     </ResultInformation>
   );
@@ -436,11 +438,16 @@ function ResultInfo({ title, value }) {
 function TipResult({handleReset, result, disabled}) {
   return (
     <ResultWrap>
-      <ResultInfo title="Tip Amount" value={result.tipAmount}></ResultInfo>
-      <ResultInfo title="Total" value={result.total}></ResultInfo>
+      <ResultInfo 
+        title="Tip Amount" 
+        value={result.tipAmount}></ResultInfo>
+      <ResultInfo 
+        title="Total" 
+        value={result.total}></ResultInfo>
       <ResultButton
         onClick={handleReset}
-        disabled={disabled}>RESET</ResultButton>
+        disabled={disabled}
+        data-testid="reset-button">RESET</ResultButton>
     </ResultWrap>
   )
 }
