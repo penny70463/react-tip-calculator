@@ -1,18 +1,287 @@
-import './App.css';
+import styled , { createGlobalStyle } from 'styled-components';
 import logo from './assets/logo.svg'
+import dollar from './assets/icon-dollar.svg'
+import person from './assets/icon-person.svg'
 import { useState, useEffect } from 'react'
 
 const TIP_OPTIONS = [5, 10, 15, 25, 50]
+
+// Define the font styles
+const GlobalStyle = createGlobalStyle`
+  body {
+    font-family: 'Space Mono', monospace;
+  }
+`;
+
+const AppContainer = styled.div`
+  --primary: hsl(172, 67%, 45%);
+  --light: hsl(185, 41%, 84%);
+  --dark: hsl(183, 100%, 15%);
+  --grayish: hsl(184, 14%, 56%);
+  --light-grayish: hsl(189, 41%, 97%);
+  --white: hsl(0, 0%, 100%);
+  --error: hsl(0, 95%, 76%);
+  min-height: 100vh;
+  text-align: center;
+  background: var(--light);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const AppLogo = styled.img`
+  margin: 3rem auto;
+`
+const AppBody = styled.div`
+  width:45%;
+  height: 50vh;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 30px;
+  font-size: calc(10px + 2vmin);
+  background: var(--white);
+  box-shadow: 1px 19px 19px 5px rgba(17,18,20,0.03);
+  -webkit-box-shadow: 1px 19px 19px 5px rgba(17,18,20,0.03);
+  -moz-box-shadow: 1px 19px 19px 5px rgba(17,18,20,0.03);
+  @media (max-width: 1440px) {
+    grid-template-rows: unset;
+    grid-template-columns: unset;
+    height: auto;
+    width: auto;
+  }
+`
+const Board = styled.div`
+  border-radius: 10px;
+  display: grid;
+  @media (max-width: 1440px) {
+    gap: 25px;
+  }
+  @media (max-width: 600px) {
+    gap: 25px;
+  }
+
+`
+
+const TipWrap = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-rows: repeat(2, 35%);
+  grid-template-columns: repeat(3, 30%);
+  gap: 15px;
+  @media (max-width: 600px) { 
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+`
+
+const TipButton = styled.button`
+  width: 100%;
+  border: none;
+  height: 40px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  font-family: inherit;
+  @media (max-width: 600px) {
+    height: 50px;
+  }
+`
+
+const CustomTip = styled(TipButton)`
+  font-size: 20px;
+  font-weight: bolder;
+  color: var(--dark);
+`
+
+const ActiveTip = styled(TipButton)`
+  font-size: 20px;
+  font-weight: 700;
+  font-family: inherit;
+  background: var(--dark);
+  color: var(--white);
+  @media (hover: hover) {
+    &:hover {
+      transition: all 0.3s ease-in-out 0.2s;
+      background: var(--light);
+      color: var(--dark);
+    }
+  }
+  
+  
+  ${props =>
+    props.$isActive &&
+    `
+    background: var(--primary);
+    color: var(--dark);
+  `}
+ 
+`
+
+// operate relative
+const InputForm = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+`
+
+const InputTitle = styled.div`
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--grayish);
+`
+
+const Input = styled.input`
+  font-size: 1.5rem;
+  color: var(--dark);
+  font-weight: bolder;
+  padding: 10px;
+  &::placeholder {
+    color: var(--grayish);
+    font-weight: 700;
+  }
+`
+
+const OperateInput = styled(Input)`
+  width:100%;
+  box-sizing: border-box;
+  height: 40px;
+  border-radius: 6px;
+  border: transparent;
+  background: var(--light-grayish);
+  font-family: inherit;
+  text-align: end;
+  &:focus,
+  &:active,
+  &:focus-visible {
+    border: 2px solid var(--primary);
+    outline: none;
+  }
+
+  ${props =>
+    props.$isBill ?
+    `
+    background-image: url(${dollar});
+    background-position: 15px 10px;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+    ` : `
+    background-image: url(${person});
+    background-position: 15px 10px;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+    `}
+
+  ${props =>
+    props.$hasError &&
+    `
+    &:focus,
+    &:active,
+    &:focus-visible {
+      border: 2px solid var(--error);
+      outline: none;
+    }
+    `
+  }
+
+  @media (max-width: 600px) {
+    height: 50px;
+    background-position: 15px 15px;
+  }
+`
+
+const ErrorMessage = styled.span`
+  position: absolute;
+  right: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--error);
+`
+
+// result relative
+const ResultWrap = styled.div`
+  border-radius: 10px;
+  display: grid;
+  padding: 30px;
+  background: var(--dark);
+  grid-template-rows: repeat(3, auto);
+  gap: 30px;
+`
+const ResultInformation = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const Result = styled.div`
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 2rem;
+  height: 1em;
+  display: flex;
+`
+
+const MainFont = styled.div`
+  color:var(--white);
+  font-weight: 700;
+  font-size: 1rem;
+` 
+
+const NoteFont = styled.div`
+  color: var(--grayish);
+  font-weight: lighter;
+  font-size: 1rem;
+  text-align: left;
+`
+
+const ResultButton = styled.button`
+    height: 40px;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 8px 0;
+    align-self: end;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: inherit;
+    background: var(--primary);
+    color: var(--dark);
+    &:disabled {
+      cursor: not-allowed;
+      opacity: .2;
+    }
+    @media (hover: hover) {
+      &:hover {
+        transition: all 0.3s ease-in-out 0.2s;
+        background: var(--light);
+        color: var(--dark);
+      }
+    }
+    
+    
+`
+
 function App() {
   let [bill, setBill] = useState('')
   let [percentage, setPercentage] = useState('')
   let [number, setNumber] = useState('')
+
   function handleReset() {
     setBill('')
     setPercentage('')
     setNumber('')
   }
 
+  // Verify status of reset button
   function disabled() {
     return isNaN(bill) || isNaN(number) || Number(bill) === 0 || Number(number) === 0
   }
@@ -29,9 +298,10 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <img className="App-logo" src={logo}  alt="logo" />
-      <div className="App-body">
+    <AppContainer>
+      <GlobalStyle />
+      <AppLogo src={logo}  alt="logo" />
+      <AppBody>
         <InputSection
             bill={bill}
             number={number}
@@ -45,8 +315,8 @@ function App() {
             disabled={disabled()}
             result={calculate()}
             />
-      </div>
-    </div>
+      </AppBody>
+    </AppContainer>
   );
 }
 
@@ -62,34 +332,35 @@ function InputSection({ bill, setBill, percentage, setPercentage, number, setNum
   },[bill, number])
 
   return (
-    <div className='board'>
+    <Board>
       <InputField
         title="Bill"
         value={bill}
         onChange={setBill}
         integer={false} />
-      <div className="input">
-        <div className="input-title">Select Tip %</div>
-        <div className="tip-wrap">
+      <InputForm>
+        <InputTitle>Select Tip %</InputTitle>
+        <TipWrap>
         {TIP_OPTIONS.map(option => (
           <Tip
             key={option}
             value={option}
             percentage={percentage}
-            setPercentage={setPercentage}
+            handleClickTip={() => {
+              setPercentage(option)
+              setShowCustom(false)
+            }}
             />
         ))}
-        {!showCustom && <button
+        {!showCustom && <CustomTip
           onClick={() => {
             setShowCustom(true)
             setPercentage('')
-          }}
-          className='tip-btn custom'>
+          }}>
             Custom
-        </button>}
+        </CustomTip>}
         {showCustom &&
-          <input
-            className="operate-input"
+          <OperateInput
             type="number"
             value={percentage.toString()}
             onChange={(e) => {
@@ -99,8 +370,8 @@ function InputSection({ bill, setBill, percentage, setPercentage, number, setNum
             placeholder='0'
             min="0"
             />}
-      </div>
-      </div>
+      </TipWrap>
+      </InputForm>
 
       <InputField
         title="Number of People"
@@ -108,19 +379,18 @@ function InputSection({ bill, setBill, percentage, setPercentage, number, setNum
         onChange={setNumber}
         integer={true}
         hasError={hasError}/>
-    </div>
+    </Board>
   );
 }
 
 function InputField({ value, title, onChange, integer, hasError = false }) {
-  let className = title === 'Bill' ? 'bill' : 'number';
-  let inputClassName = hasError ? `operate-input ${className} error` : `operate-input ${className}`
 
   return (
-    <div className="input">
-      <div className="input-title">{title}</div>
-      <input
-        className={inputClassName} 
+    <InputForm>
+      <InputTitle>{title}</InputTitle>
+      <OperateInput
+        $isBill={title === 'Bill'}
+        $hasError={hasError}
         type="number"
         onChange={(e) => {
           let val = e.target.value;
@@ -132,47 +402,46 @@ function InputField({ value, title, onChange, integer, hasError = false }) {
         placeholder="0"
         min="0"/>
       { hasError &&
-        <span className="error-message">Can't be zero</span>}
-    </div>
+        <ErrorMessage>Can't be zero</ErrorMessage>}
+    </InputForm>
   );
 }
 
-function Tip({value, percentage, setPercentage}) {
+function Tip({value, percentage, handleClickTip}) {
   let isActive = percentage === value
   return (
-      <button 
-        className={`tip-btn tip-btn-with-style ${isActive && 'active'}`}
-        onClick={() => setPercentage(value)}
+      <ActiveTip 
+        $isActive={isActive}
+        onClick={handleClickTip}
         >
           {value}%
-      </button>
+      </ActiveTip>
   )
 }
 
 function ResultInfo({ title, value }) {
   return (
-    <div className="result-info">
+    <ResultInformation>
       <div>
-        <div className="main-font">{title}</div>
-        <div className="note-font">/ person</div>
+        <MainFont>{title}</MainFont>
+        <NoteFont>/ person</NoteFont>
       </div>
-      <div className="result">
+      <Result>
         <div>${value}</div>
-      </div>
-    </div>
+      </Result>
+    </ResultInformation>
   );
 }
 
 function TipResult({handleReset, result, disabled}) {
   return (
-    <div className='result-wrap board'>
+    <ResultWrap>
       <ResultInfo title="Tip Amount" value={result.tipAmount}></ResultInfo>
       <ResultInfo title="Total" value={result.total}></ResultInfo>
-      <button
-        className="result-btn result-btn-with-style"
+      <ResultButton
         onClick={handleReset}
-        disabled={disabled}>RESET</button>
-    </div>
+        disabled={disabled}>RESET</ResultButton>
+    </ResultWrap>
   )
 }
 
